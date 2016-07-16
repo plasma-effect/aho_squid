@@ -1,19 +1,19 @@
-﻿///<reference path="Scripts/typings/jquery/jquery.d.ts" />
-class XorShift {
-    constructor(private seed: number) {
+var XorShift = (function () {
+    function XorShift(seed) {
+        this.seed = seed;
     }
-
-    public run() {
+    XorShift.prototype.run = function () {
         this.seed ^= (this.seed << 17);
         this.seed ^= (this.seed >> 9);
         this.seed ^= (this.seed << 8);
         this.seed ^= (this.seed >> 27);
         return this.seed;
-    }
-}
-function make_xorshift(seed: number) {
+    };
+    return XorShift;
+}());
+function make_xorshift(seed) {
     var engine = new XorShift(seed);
-    return () => {
+    return function () {
         return engine.run();
     };
 }
@@ -25,38 +25,30 @@ function seed_generate() {
     v ^= (v >> 21);
     return v;
 }
-var random: Function;
-
-var canvas: HTMLCanvasElement;
-var ctx: CanvasRenderingContext2D;
-
-var angle: number;
-
-var ika: HTMLImageElement;
-var bg: HTMLImageElement;
-var rare: HTMLImageElement;
-var title: HTMLImageElement;
-var gameover: HTMLImageElement;
-var danger: HTMLImageElement;
-var raredanger: HTMLImageElement;
-
-var message: HTMLElement;
-
-var data: number[];
-var outer: number[];
-var left: boolean;
-var right: boolean;
-var space: boolean;
-
-const speed = 3;
-const rect = 240;
-const border = 30;
-const gameoverline = 70;
-const correction = 1;
-
-var score: number;
-var counter: number;
-
+var random;
+var canvas;
+var ctx;
+var angle;
+var ika;
+var bg;
+var rare;
+var title;
+var gameover;
+var danger;
+var raredanger;
+var message;
+var data;
+var outer;
+var left;
+var right;
+var space;
+var speed = 3;
+var rect = 240;
+var border = 30;
+var gameoverline = 70;
+var correction = 1;
+var score;
+var counter;
 function init() {
     var ar = new Array(4);
     ar[0] = random() % 16;
@@ -75,26 +67,24 @@ function init() {
         }
     }
     data =
-       [0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0];
-    for (var i = 0; i < 4;++i) {
+        [0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0];
+    for (var i = 0; i < 4; ++i) {
         data[ar[i]] = 1;
     }
     outer =
-       [0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0,
+        [0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
             0, 0, 0, 0];
     score = 0;
     counter = 0;
 }
-
 function mainloop() {
     var r = random() % 16;
     outer[r] += 1 + data[r] + score / 10000;
-
     if (right) {
         angle += 360 - speed;
         angle %= 360;
@@ -103,17 +93,13 @@ function mainloop() {
         angle += speed;
         angle %= 360;
     }
-
     var target = (16 - Math.floor(angle / 22.5)) % 16;
-
     if (space && outer[target] >= border) {
         outer[target] = 0;
     }
-
     ++score;
-
     var max = 0;
-    for (var i = 0; i < outer.length;++i) {
+    for (var i = 0; i < outer.length; ++i) {
         if (max < outer[i])
             max = outer[i];
     }
@@ -127,14 +113,11 @@ function mainloop() {
         message.innerText = "Game Over 　　 score:" + score;
         return true;
     }
-
     return false;
 }
-
 function ika_draw() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.drawImage(bg, 0, 0);
-
     for (var i = 0; i < 16; ++i) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.translate(320, 0);
@@ -154,12 +137,13 @@ function ika_draw() {
         }
     }
 }
-
-enum mode_t {
-    title, game, gameover
-}
-var mode: mode_t;
-
+var mode_t;
+(function (mode_t) {
+    mode_t[mode_t["title"] = 0] = "title";
+    mode_t[mode_t["game"] = 1] = "game";
+    mode_t[mode_t["gameover"] = 2] = "gameover";
+})(mode_t || (mode_t = {}));
+var mode;
 function loop() {
     if (mode == mode_t.title) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -179,7 +163,8 @@ function loop() {
             window.open("https://twitter.com/intent/tweet?text=" + text + "&hashtags=" + tag + "&url=" + url);
         }
         ika_draw();
-    } else {
+    }
+    else {
         ika_draw();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.drawImage(gameover, 0, 0);
@@ -188,19 +173,14 @@ function loop() {
             message.innerText = "ゲーム開始待機 score:" + score;
         }
     }
-    
     space = false;
 }
-
-window.onload = () => {
-    canvas = <HTMLCanvasElement>document.getElementById("canvas");
+window.onload = function () {
+    canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     angle = 0;
-
     random = make_xorshift(seed_generate());
-    
     mode = mode_t.title;
-
     ika = new Image(160, 80);
     danger = new Image(160, 80);
     bg = new Image(640, 480);
@@ -215,12 +195,9 @@ window.onload = () => {
     gameover.src = "gameover.png";
     danger.src = "ikadanger.png";
     raredanger.src = "raredanger.png";
-
     ctx.fillStyle = "black";
-
     score = 0;
     message = document.getElementById("message");
-
     data = new Array(16);
     outer = new Array(16);
     data[0] = 2;

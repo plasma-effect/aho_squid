@@ -1,5 +1,14 @@
 ﻿body {
     font-family: 'Segoe UI', sans-serif;
+    background-color:greenyellow;
+}
+
+p {
+    font-family:'Segoe UI',sans-serif;
+    overflow:scroll;
+    height:100pt;
+    width:auto;
+    background-color:white;
 }
 
 span {

@@ -3,13 +3,27 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>TypeScript HTML App</title>
+    <title>烏賊</title>
     <link rel="stylesheet" href="app.css" type="text/css" />
+    <script src="Scripts/jquery-3.0.0.js"></script>
     <script src="app.js"></script>
 </head>
 <body>
-    <h1>TypeScript HTML App</h1>
-
-    <div id="content"></div>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <h1 id="message">ゲーム開始待機 score:0</h1>
+    <p>多少逃げる烏賊はいいとして逃げすぎる烏賊はダメなので戻してやりましょう。<br />
+        <br />
+    操作説明
+    <br />
+        左右キー　回転<br />スペース　烏賊を戻す<br /><br />
+        赤い線あたりの烏賊を戻すことができますが全然出てきてない烏賊は戻せません。<br />
+        戻せるようになるぐらい出てきた烏賊は輪郭が赤くなります。<br />
+        色違いの烏賊は白の烏賊より足が早いです、注意しましょう。<br />
+    <br />
+    注意：ゲーム終了後ツイート用のポップアップが開きます。<br />
+    ポップアップが許可されてない場合結果をツイートできません。
+    </p>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-text="「出る烏賊は打たれる」をやってます" data-hashtags="squid_circuit">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </body>
 </html>
